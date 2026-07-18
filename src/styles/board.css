@@ -1,0 +1,192 @@
+.board-wrapper {
+  width: min(90vw, 90vh, 560px);
+  margin: 0 auto;
+}
+
+.board {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  border-radius: 12px;
+  touch-action: none;
+}
+
+.board:focus-visible {
+  box-shadow: 0 0 0 3px var(--accent);
+}
+
+.board-grid {
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  height: 100%;
+}
+
+.cell {
+  background: var(--cell);
+  border: 1px solid var(--cell-border);
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+}
+
+.cell--visited {
+  background: color-mix(in srgb, var(--cell) 70%, var(--accent) 12%);
+}
+
+.board-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.wall-segment {
+  stroke: var(--wall);
+  stroke-width: 0.09;
+  stroke-linecap: round;
+}
+
+/* Hue varies per level (--path-hue, set inline by Board.tsx); saturation and
+ * lightness come from theme.css so contrast against --cell stays good in
+ * both light and dark mode regardless of which hue lands on a given level. */
+.path-segment {
+  stroke: hsl(var(--path-hue, 258) var(--path-saturation) var(--path-lightness) / 0.82);
+  stroke-linejoin: round;
+  stroke-dasharray: 1.05;
+  stroke-dashoffset: 0;
+  transition: stroke 0.15s ease;
+}
+
+.path-segment--error {
+  stroke: var(--error-alpha);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .path-segment {
+    animation: path-draw-in 0.14s ease-out;
+  }
+
+  .path-segment--solved {
+    animation: path-solved-glow 0.3s ease-out;
+  }
+}
+
+@keyframes path-draw-in {
+  from {
+    stroke-dashoffset: 1.05;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* A brief per-segment pulse — each segment's animation-delay is staggered
+ * PATH_SWEEP_STAGGER_MS apart (set inline in PathLayer.tsx), so this same
+ * short keyframe sweeps across the whole shape start-to-finish instead of
+ * every segment flashing at once. Duration must match PATH_SWEEP_PULSE_MS in
+ * src/utils/solvedHighlight.ts. */
+@keyframes path-solved-glow {
+  0%,
+  100% {
+    stroke: hsl(var(--path-hue, 258) var(--path-saturation) var(--path-lightness) / 0.82);
+    filter: none;
+  }
+  50% {
+    stroke: var(--success);
+    filter: drop-shadow(0 0 3px var(--success));
+  }
+}
+
+.board-checkpoints {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.checkpoint {
+  /* Fallback for the one render before Board.tsx's layout measurement lands
+   * (see useLayoutEffect there) — that measurement is synchronous, so this
+   * should never actually flash, but the transition below covers any residual
+   * size change (window resize, level switch) so it eases instead of popping. */
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--checkpoint-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.75rem;
+  line-height: 1;
+  transition:
+    width 0.15s ease,
+    height 0.15s ease,
+    font-size 0.15s ease;
+  box-shadow: 0 2px 6px var(--shadow);
+}
+
+.checkpoint--error {
+  background: var(--error);
+  box-shadow: 0 0 0 3px var(--error-alpha);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .checkpoint {
+    animation: checkpoint-pop 0.25s ease-out;
+  }
+
+  .checkpoint--error {
+    animation: checkpoint-shake 0.3s ease-in-out;
+  }
+
+  .checkpoint--solved {
+    animation: checkpoint-solved-glow 0.3s ease-out;
+  }
+}
+
+@keyframes checkpoint-pop {
+  from {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes checkpoint-shake {
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+  }
+  25% {
+    transform: translate(-65%, -50%);
+  }
+  75% {
+    transform: translate(-35%, -50%);
+  }
+}
+
+/* Each checkpoint's animation-delay (set inline in Board.tsx) lines up with
+ * the moment the path-segment sweep passes through its cell, so checkpoints
+ * light up in solve order as part of the same start-to-finish sweep rather
+ * than all blinking together. */
+@keyframes checkpoint-solved-glow {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    background: var(--accent);
+    box-shadow: 0 2px 6px var(--shadow);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.15);
+    background: var(--success);
+    box-shadow: 0 0 12px var(--success);
+  }
+}
