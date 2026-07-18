@@ -3,6 +3,8 @@
 A single-path grid puzzle. Draw one continuous line that links the numbered
 dots in order while filling every cell exactly once.
 
+**[▶ Play now](https://onezloop.github.io/dotNlink/)**
+
 ## How to play
 
 - Start at dot **1** and draw a line to **2**, **3**, and so on, in order.
