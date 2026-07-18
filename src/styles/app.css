@@ -1,0 +1,368 @@
+:root {
+  --topbar-height: 52px;
+}
+
+.app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Top padding clears the fixed top bar (see .app-topbar). */
+  padding: calc(var(--topbar-height) + 12px) 16px 16px;
+  gap: 16px;
+  position: relative;
+}
+
+/* Fixed icon bar across the top: Levels/Back on the left, theme on the right.
+ * Being fixed (out of flow) it adds no column height — so it never pushes the
+ * board past the viewport — and it stays put while the level grid scrolls. */
+.app-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--topbar-height);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--cell-border);
+}
+
+.icon-button {
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--cell-border);
+  border-radius: 999px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.icon-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Comfortable tap targets on touch devices. */
+@media (pointer: coarse) {
+  .icon-button {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.play-screen {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-header {
+  width: min(90vw, 560px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.app-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.app-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.level-badge {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.timer {
+  font-variant-numeric: tabular-nums;
+  min-width: 4.5ch;
+}
+
+.difficulty-badge {
+  text-transform: capitalize;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent);
+}
+
+.controls-row {
+  display: flex;
+  gap: 12px;
+}
+
+.controls-row button {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--cell-border);
+  border-radius: 8px;
+  padding: 8px 18px;
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.controls-row button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Level select */
+.level-select {
+  width: min(92vw, 720px);
+  margin: 0 auto;
+}
+
+.level-select-title {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.level-select-hint {
+  margin: 6px 0 0;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.level-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--cell-border);
+  border-radius: 10px;
+  padding: 10px 6px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.level-tile-id {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.level-tile--completed {
+  border-color: var(--success);
+}
+
+.level-tile--current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.level-tile--locked {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.level-tile-check {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  color: var(--success);
+  font-weight: 700;
+}
+
+.level-tile-lock {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 0.8rem;
+}
+
+.level-tile-time {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Win modal */
+.win-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.win-modal {
+  position: relative;
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 16px;
+  padding: 28px 32px;
+  text-align: center;
+  box-shadow: 0 12px 40px var(--shadow);
+  min-width: 260px;
+  max-width: calc(100vw - 32px);
+}
+
+.win-modal-time {
+  font-size: 2rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  margin: 4px 0;
+}
+
+.win-modal-best {
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.win-modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.win-modal-actions button {
+  border: 1px solid var(--cell-border);
+  background: var(--cell);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 16px;
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.win-modal-next {
+  background: var(--accent);
+  color: var(--checkpoint-text);
+  border-color: var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .win-modal {
+    animation: win-modal-in 0.25s ease-out;
+  }
+}
+
+@keyframes win-modal-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Confetti-lite: a handful of small rectangles falling from above the modal,
+ * built from CSS gradients rather than a canvas/library. */
+.win-modal-confetti {
+  position: absolute;
+  inset: -20px -20px auto -20px;
+  height: 60px;
+  pointer-events: none;
+  overflow: visible;
+  background-image:
+    linear-gradient(var(--accent) 60%, transparent 0),
+    linear-gradient(var(--success) 60%, transparent 0),
+    linear-gradient(#e0a721 60%, transparent 0),
+    linear-gradient(var(--accent) 60%, transparent 0),
+    linear-gradient(var(--success) 60%, transparent 0);
+  background-repeat: no-repeat;
+  background-size: 8px 14px;
+  background-position:
+    10% 0,
+    30% 0,
+    50% 0,
+    70% 0,
+    90% 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .win-modal-confetti {
+    animation: confetti-fall 0.9s ease-in forwards;
+  }
+}
+
+@keyframes confetti-fall {
+  from {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(90px) rotate(200deg);
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Small screens (phones, narrow tablets). Keeps the header, level grid, and
+ * win modal from overflowing or crowding once the viewport gets tight.
+ * ------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .app {
+    padding: calc(var(--topbar-height) + 10px) 12px 12px;
+    gap: 12px;
+  }
+
+  .app-header {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .app-title {
+    font-size: 1.2rem;
+  }
+
+  .app-header-meta {
+    gap: 8px;
+    font-size: 0.82rem;
+  }
+
+  .level-select-title {
+    font-size: 1.15rem;
+  }
+
+  .level-grid {
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 8px;
+  }
+
+  .win-modal {
+    padding: 24px 20px;
+  }
+
+  .win-modal-actions {
+    flex-wrap: wrap;
+  }
+}

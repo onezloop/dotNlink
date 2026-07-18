@@ -1,7 +1,8 @@
 # dotNlink
 
-A single-path grid puzzle. Draw one continuous line that links the numbered
-dots in order while filling every cell exactly once.
+A one-line grid puzzle. Draw a single unbroken path that connects the numbered
+dots in order and fills every cell on the board — one line, one solution, no
+cell left empty. Simple to learn, and a satisfying knot to untangle in your head.
 
 **[▶ Play now](https://onezloop.github.io/dotNlink/)**
 
@@ -11,7 +12,8 @@ dots in order while filling every cell exactly once.
 - The line must pass through **every cell** on the grid — no cell left empty.
 - The line can't cross itself and can't pass through wall barriers.
 - Drag to draw, or use the arrow keys. Back up to undo the last step.
-- You win when every cell is filled and the dots are linked in order.
+- You win when every cell is filled and the dots are linked in order — race your
+  own **best time** on each level.
 
 ## Setup
 
